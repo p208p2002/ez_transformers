@@ -1,6 +1,8 @@
-from eztorch import *
+from eztransfomers import *
+from eztransfomers.data_model import *
 import unittest
-
+from transformers import AlbertConfig, AlbertForSequenceClassification, BertTokenizer
+import torch
 
 class TestEZTransformers(unittest.TestCase):
     def test_makeTorchDataset(self):
@@ -20,6 +22,16 @@ class TestEZTransformers(unittest.TestCase):
         train_dataset,test_dataset = splitDataset(dataset,split_rate=0.5)
         makeTorchDataLoader(train_dataset,batch_size = 4,shuffle = True)
         makeTorchDataLoader(test_dataset,batch_size = 2,shuffle = False)
+
+class TestEZTransformersDataModel(unittest.TestCase):
+    def test_BertDataModel(self):
+        tokenizer = BertTokenizer.from_pretrained('albert_tiny/vocab.txt')
+        model_config = AlbertConfig.from_json_file('albert_tiny/albert_config_tiny.json')
+        model = AlbertForSequenceClassification.from_pretrained('albert_tiny/albert_tiny_torch.bin',config = model_config)
+        bertDataModel = BertDataModel(tokenizer)
+        bertDataModel.toBertIds('你好嗎')
+        bertDataModel.toBertIds('你好嗎','我很好')
+
 
 if __name__ == "__main__":
     unittest.main()
