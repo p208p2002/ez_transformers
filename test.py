@@ -1,4 +1,4 @@
-from eztransformers import *
+from eztorch import *
 import unittest
 
 
