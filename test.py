@@ -31,6 +31,9 @@ class TestEZTransformersDataModel(unittest.TestCase):
         bertDataModel = BertDataModel(tokenizer)
         bertDataModel.toBertIds('你好嗎')
         bertDataModel.toBertIds('你好嗎','我很好')
+        bertDataModel.add(input_a='電影很好看哦',label=1)
+        bertDataModel.add(input_a='今天的電影如何?',input_b='超級難看',label=0)
+        assert len(bertDataModel.features) == 2
 
 
 if __name__ == "__main__":
