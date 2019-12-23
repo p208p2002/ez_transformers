@@ -7,7 +7,8 @@ class TrainManager():
             device = 'cpu', # cpu or cuda
             epoch=3,
             learning_rate=5e-6,
-            log_interval = 50
+            log_interval = 50,
+            save_step_interval = 1000
         ):
         blockPrint()
         model.to(device)
@@ -21,12 +22,14 @@ class TrainManager():
         self.running_test_acc = 0.0
         self.running_test_loss = 0.0
         self.log_interval = log_interval
+        self.save_step_interval = save_step_interval
     
     def train(self,train_dataloader,test_dataloader = None):
         device = self.device
         optimizer = self.optimizer
         model = self.model
         total_epoch = self.epoch
+        step_counter = 0
         try:
             for epoch in range(total_epoch):
                 # train
@@ -51,7 +54,13 @@ class TrainManager():
 
                     # log
                     if(batch_index % self.log_interval == 0):
-                        log(">> TRAIN << epoch:%2d batch:%4d loss:%2.4f acc:%3.4f"%(epoch+1, batch_index+1, self.running_train_loss, self.running_train_acc))     
+                        log(">> TRAIN << epoch:%2d batch:%4d loss:%2.4f acc:%3.4f"%(epoch+1, batch_index+1, self.running_train_loss, self.running_train_acc))
+                    
+                    # counter
+                    step_counter += 1
+                    if(step_counter % self.save_step_interval == 0):
+                        saveModel(model,'SAVE_STEP_e%s_testacc%s'%(str(epoch+1),str(self.running_train_acc)))
+                    
                 
                 # test
                 self.running_test_loss = 0.0
