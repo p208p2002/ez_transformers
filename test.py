@@ -43,14 +43,6 @@ class Test_TrainModel(unittest.TestCase):
         model_config = AlbertConfig.from_json_file('albert_tiny/albert_config_tiny.json')
         model = AlbertForSequenceClassification.from_pretrained('albert_tiny/albert_tiny_torch.bin',config = model_config)
         
-        #
-        no_decay = ['bias', 'LayerNorm.weight']
-        optimizer_grouped_parameters = [
-        {'params': [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)], 'weight_decay': 0.0},
-        {'params': [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
-        ]
-        optimizer = AdamW(optimizer_grouped_parameters,lr=5e-6, eps=1e-8)
-        
         # dataloader
         feature = [[1,2,3],[4,5,6]]
         label = [[1],[0]]
@@ -59,9 +51,25 @@ class Test_TrainModel(unittest.TestCase):
         train_dataloader = makeTorchDataLoader(train_dataset,batch_size = 4,shuffle = True)
         test_dataloader =makeTorchDataLoader(test_dataset,batch_size = 2,shuffle = False)
 
-        #
-        tm = TrainManager(model=model, optimizer=optimizer, log_interval=1)
+        # cpu
+        no_decay = ['bias', 'LayerNorm.weight']
+        optimizer_grouped_parameters = [
+        {'params': [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)], 'weight_decay': 0.0},
+        {'params': [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
+        ]
+        optimizer = AdamW(optimizer_grouped_parameters,lr=5e-6, eps=1e-8)
+        tm = TrainManager(model=model, optimizer=optimizer, log_interval=1, epoch=10, device='cpu')
         tm.train(train_dataloader=train_dataloader, test_dataloader=test_dataloader)
+
+        # cuda
+        no_decay = ['bias', 'LayerNorm.weight']
+        optimizer_grouped_parameters = [
+        {'params': [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)], 'weight_decay': 0.0},
+        {'params': [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
+        ]
+        optimizer = AdamW(optimizer_grouped_parameters,lr=5e-6, eps=1e-8)
+        tm_cuda = TrainManager(model=model, optimizer=optimizer, log_interval=1, epoch=10, device='cuda')
+        tm_cuda.train(train_dataloader=train_dataloader, test_dataloader=test_dataloader)
 
 if __name__ == "__main__":
     unittest.main()
