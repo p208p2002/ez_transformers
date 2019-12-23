@@ -1,5 +1,5 @@
 # train model
-from .core import computeAccuracy,log,blockPrint
+from .core import computeAccuracy,log,blockPrint,saveModel
 class TrainManager():
     def __init__(self,
             model,
@@ -52,6 +52,7 @@ class TrainManager():
                     # log
                     if(batch_index % self.log_interval == 0):
                         log(">> TRAIN << epoch:%2d batch:%4d loss:%2.4f acc:%3.4f"%(epoch+1, batch_index+1, self.running_train_loss, self.running_train_acc))     
+                
                 # test
                 self.running_test_loss = 0.0
                 self.running_test_acc = 0.0
@@ -72,8 +73,9 @@ class TrainManager():
                     # log
                     if(batch_index % 50 == 0):
                         log(">> TEST << epoch:%2d batch:%4d loss:%2.4f acc:%3.4f"%(epoch+1, batch_index+1, self.running_test_loss, self.running_test_acc))
-        except KeyboardInterrupt:
-            print("KeyboardInterrupt")
-        
-            
                 
+                # save model
+                saveModel(model,'END_OF_EPOCH_e%s_testacc%s'%(str(epoch+1),str(self.running_test_acc)))
+        except KeyboardInterrupt:
+            saveModel(model,'KeyboardInterrupt_e%s_b%s'%(str(epoch+1),str(batch_index)))
+        

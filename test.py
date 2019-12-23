@@ -58,7 +58,7 @@ class Test_TrainModel(unittest.TestCase):
         {'params': [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
         ]
         optimizer = AdamW(optimizer_grouped_parameters,lr=5e-6, eps=1e-8)
-        tm = TrainManager(model=model, optimizer=optimizer, log_interval=1, epoch=10, device='cpu')
+        tm = TrainManager(model=model, optimizer=optimizer, log_interval=1, epoch=3, device='cpu')
         tm.train(train_dataloader=train_dataloader, test_dataloader=test_dataloader)
 
         # cuda
@@ -68,7 +68,7 @@ class Test_TrainModel(unittest.TestCase):
         {'params': [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
         ]
         optimizer = AdamW(optimizer_grouped_parameters,lr=5e-6, eps=1e-8)
-        tm_cuda = TrainManager(model=model, optimizer=optimizer, log_interval=1, epoch=10, device='cuda')
+        tm_cuda = TrainManager(model=model, optimizer=optimizer, log_interval=1, epoch=3, device='cuda')
         tm_cuda.train(train_dataloader=train_dataloader, test_dataloader=test_dataloader)
 
 if __name__ == "__main__":

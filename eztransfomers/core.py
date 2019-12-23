@@ -1,6 +1,7 @@
 import torch
 from torch.utils.data import TensorDataset, DataLoader, random_split
 import os,sys
+from datetime import datetime
 
 def log(*logs):
     enablePrint()
@@ -14,6 +15,16 @@ def blockPrint():
 # Restore
 def enablePrint():
     sys.stdout = sys.__stdout__
+
+def saveModel(model,name):
+    now = datetime.now()
+    base_dir = 'train_models/'
+    if(not os.path.isdir(base_dir)):
+        os.mkdir(base_dir)
+    save_dir = base_dir + now.strftime("%m-%d-%Y_%H-%M-%S_") + name
+    os.mkdir(save_dir)
+    model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
+    model_to_save.save_pretrained(save_dir)
 
 def computeAccuracy(y_pred, y_target):
     _, y_pred_indices = y_pred.max(dim=1)
