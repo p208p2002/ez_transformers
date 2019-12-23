@@ -55,13 +55,13 @@ class Test_TrainModel(unittest.TestCase):
         feature = [[1,2,3],[4,5,6]]
         label = [[1],[0]]
         dataset = makeTorchDataset(feature,label)
-        # train_dataset,test_dataset = splitDataset(dataset,split_rate=0.5)
-        # train_dataloader = makeTorchDataLoader(train_dataset,batch_size = 4,shuffle = True)
-        # test_dataloader =makeTorchDataLoader(test_dataset,batch_size = 2,shuffle = False)
+        train_dataset,test_dataset = splitDataset(dataset,split_rate=0.5)
+        train_dataloader = makeTorchDataLoader(train_dataset,batch_size = 4,shuffle = True)
+        test_dataloader =makeTorchDataLoader(test_dataset,batch_size = 2,shuffle = False)
 
         #
-        # tm = TrainManager(model=model, optimizer=optimizer)
-        # tm.train(train_dataloader=train_dataloader, test_dataloader=test_dataloader)
+        tm = TrainManager(model=model, optimizer=optimizer, log_interval=1)
+        tm.train(train_dataloader=train_dataloader, test_dataloader=test_dataloader)
 
 if __name__ == "__main__":
     unittest.main()
