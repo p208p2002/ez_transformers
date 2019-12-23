@@ -52,6 +52,26 @@ class TrainManager():
                     # log
                     if(batch_index % self.log_interval == 0):
                         log(">> TRAIN << epoch:%2d batch:%4d loss:%2.4f acc:%3.4f"%(epoch+1, batch_index+1, self.running_train_loss, self.running_train_acc))     
+                # test
+                self.running_test_loss = 0.0
+                self.running_test_acc = 0.0
+                for batch_index, batch_dict in enumerate(test_dataloader):
+                    model.eval()
+                    batch_dict = tuple(t.to(device) for t in batch_dict)
+                    outputs = model(batch_dict[0], labels=batch_dict[1])
+                    loss, logits = outputs[:2]
+
+                    # compute the loss
+                    loss_t = loss.item()
+                    self.running_test_loss += (loss_t - self.running_test_loss) / (batch_index + 1)
+
+                    # compute the accuracy
+                    acc_t = computeAccuracy(logits, batch_dict[1])
+                    self.running_test_acc += (acc_t - self.running_test_acc) / (batch_index + 1)
+
+                    # log
+                    if(batch_index % 50 == 0):
+                        log(">> TEST << epoch:%2d batch:%4d loss:%2.4f acc:%3.4f"%(epoch+1, batch_index+1, self.running_test_loss, self.running_test_acc))
         except KeyboardInterrupt:
             print("KeyboardInterrupt")
         
