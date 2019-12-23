@@ -61,7 +61,6 @@ class TrainManager():
                     if(step_counter % self.save_step_interval == 0):
                         saveModel(model,'SAVE_STEP_e%s_testacc%s'%(str(epoch+1),str(self.running_train_acc)))
                     
-                
                 # test
                 self.running_test_loss = 0.0
                 self.running_test_acc = 0.0
