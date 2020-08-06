@@ -1,6 +1,6 @@
-from eztransfomers import *
-from eztransfomers.data_model import *
-from eztransfomers.train_model import *
+from ez_transfomers import *
+from ez_transfomers.data_model import *
+from ez_transfomers.train_model import *
 import unittest
 from transformers import AlbertConfig, AlbertForSequenceClassification, BertTokenizer,AdamW
 import torch
