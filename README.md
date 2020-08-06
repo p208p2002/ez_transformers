@@ -5,10 +5,14 @@
     Eazy and useful tools for PyTorch and PyTorch-Transformers
 <p>
 
+## Install
+```
+pip install -U git+https://github.com/p208p2002/ez_transformers.git@master
+```
 ## Document
 ### General
 #### Usage
-`from eztransfomers import *`
+`from ez_transfomers import *`
 ```
 def saveModel(model,name)
 ```
